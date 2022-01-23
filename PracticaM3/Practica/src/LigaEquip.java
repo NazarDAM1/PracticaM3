@@ -26,6 +26,7 @@ public class LigaEquip {
         llegirArchiuArray(); // funció per llegir el TXT i ficar la informació a array
 
         do {
+            
 
             sumaPartits(); // agafa els partits guanyats, perduts i empatats i amb aquests valors fa la
                            // suma de partits jugats així la suma de partits sempre serà correcta, el
@@ -93,7 +94,8 @@ public class LigaEquip {
         String[] arreglo_datos = linea.split(":");// tot que està dividit per : es ficara en una posicio en la array
         for (int i = 0; i < arreglo_datos.length; i++) {
 
-            if (arreglo_datos[0] == "") { // si la primera posicio de arxiu es null no fara la lectura de arxiu perque no ne cap informacio 
+            if (arreglo_datos[0] == "") { // si la primera posicio de arxiu es null no fara la lectura de arxiu perque
+                                          // no ne cap informacio
                 System.out.println("el arxiu no te cap informacio");
                 return;
             } else {
@@ -301,37 +303,50 @@ public class LigaEquip {
 
     static void esborrarEquip() throws IOException {
         trobarPrimerNull();
-        System.out.println("Selecciona el equip per esborrar:");
-        for (int i = 0, j = 1; i < primerNull; i++, j++) {
+        if (primerNull == 0) {
+            System.out.println("No hi ha cap equip per esborrar");
+            return;
 
-            System.out.println(j + ") " + arrayNomEquips[i]);
-        }
-        int equipEsborrar = dadesConsola.nextInt();
-        equipEsborrar--;
-        System.out.println("El equip " + arrayNomEquips[equipEsborrar] + " esta borrat");
-        FileWriter filewriter = new FileWriter(new File("equips.txt"));
+        } else {
+           
+            System.out.println("Selecciona el equip per esborrar:");
+            for (int i = 0, j = 1; i < primerNull; i++, j++) {
 
-        for (int i = 0; i < primerNull - 1; ++i) {
-            if (arrayNomEquips[equipEsborrar] == arrayNomEquips[i]) { // Quan fica les dades a arxiu salta l'equip que
-                                                                      // hem seleccionat.
-                i++;
+                System.out.println(j + ") " + arrayNomEquips[i]);
             }
-            filewriter.write(arrayNomEquips[i] + ":");
-            for (int j = 0; j <= 4; ++j) {
-                filewriter.write(arrayInformacioEquips[i][j] + ":");
-                filewriter.flush();
-            }
-            filewriter.write("\n");
-        }
+            int equipEsborrar = dadesConsola.nextInt();
+            dadesConsola.nextLine(); // per salta el enter
+            
+            equipEsborrar--;
+            System.out.println("El equip " + arrayNomEquips[equipEsborrar] + " esta borrat");
+            FileWriter filewriter = new FileWriter(new File("equips.txt"));
 
-        for (int i = 0; i < primerNull; i++) { // després de ficar les dades a l'arxiu amb l'equip esborrat als llocs de
-                                               // la array on hi havien dades fico null
-
-            arrayNomEquips[i] = null;
-            for (int j = 0; j < 4; j++) {
-                arrayInformacioEquips[i][j] = 0;
+            for (int i = 0; i < primerNull - 1; ++i) {
+                if (arrayNomEquips[equipEsborrar] == arrayNomEquips[i]) { // Quan fica les dades a arxiu salta l'equip
+                                                                          // que
+                                                                          // hem seleccionat.
+                    i++;
+                }
+                filewriter.write(arrayNomEquips[i] + ":");
+                for (int j = 0; j <= 4; ++j) {
+                    filewriter.write(arrayInformacioEquips[i][j] + ":");
+                    filewriter.flush();
+                }
+                filewriter.write("\n");
             }
+
+            for (int i = 0; i < primerNull; i++) { // després de ficar les dades a l'arxiu amb l'equip esborrat als
+                                                   // llocs de
+                                                   // la array on hi havien dades fico null
+
+                arrayNomEquips[i] = null;
+                for (int j = 0; j < 4; j++) {
+                    arrayInformacioEquips[i][j] = 0;
+                }
+            }
+
+            llegirArchiuArray(); // torno llegir l'arxiu que no te l'equip esborrat
+            return;
         }
-        llegirArchiuArray(); // torno llegir l'arxiu que no te l'equip esborrat
     }
 }
